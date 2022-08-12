@@ -12,19 +12,20 @@ class I2CComm(object):
     I2C_BUS_NUM = 1 # 0 for Model B Rev 1.
 
     def __init__(self):
-        self.master = smbus.SMBus(self.I2C_BUS_NUM)
-        self.slave_addr_list = [4, 5, 6] # 슬레이브 주소 목록
+        self.master = smbus.SMBus(self.I2C_BUS_NUM) # setting!
+        self.slave_addr_list = [8] # 슬레이브 주소 목록
 
     def run(self):
         me = self.master
-        on_off = True
+        on_off = 1000
         while 1:
+            print(" {} \n".format(on_off))
             for addr in self.slave_addr_list:
                 try:
                     me.write_byte(addr, int(on_off))
+                    on_off += 1
                 except IOError:
                     pass
-            on_off = not on_off
             time.sleep(1)
 
 def main():
