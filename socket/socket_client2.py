@@ -4,7 +4,7 @@ HOST = 'localhost'
 PORT = 50007
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.connect((HOST, PORT)) ## 
+    s.connect((HOST, PORT)) # 연결 
     while True:
         n = input("1-9 사이의 숫자를 입력하세요(0은 게임포기):")
         if not n.strip():

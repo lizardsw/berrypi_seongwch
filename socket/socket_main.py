@@ -1,11 +1,12 @@
 import socket
 import random
+import time
 
 HOST = ''
 PORT = 50007
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.bind((HOST, PORT))
+    s.bind((HOST, PORT)) # 
     s.listen()
     print('서버가 시작되었습니다.')
     conn, addr = s.accept()
@@ -15,7 +16,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         while True:
             data = conn.recv(1024).decode('utf-8')
             print(f'데이터:{data}')
-
+            time.sleep(5)
             try:
                 n = int(data)
             except ValueError:

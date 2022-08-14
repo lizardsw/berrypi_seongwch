@@ -1,7 +1,7 @@
 #include <Wire.h>
 
 const int my_i2c_addr = 0x8; // 이 부분은 각 장치마다 다르게 변경하여 컴파일/업로드
-const int led_pin =  13;
+const int led_pin =  3;
 
 void setup() {
 	pinMode(led_pin, OUTPUT);
