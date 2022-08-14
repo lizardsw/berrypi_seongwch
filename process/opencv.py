@@ -33,11 +33,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         ret, frame = capture.read()     # 카메라로부터 현재 영상을 받아 frame에 저장, 잘 받았다면 ret가 참
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # 영상을 흑백으로 바꿔줌
         faces = face_cascade.detectMultiScale(gray, scaleFactor= 1.5, minNeighbors=3, minSize=(20,20))
-        
+        face_info = {}
         if len(faces) :
             i = len(faces)
             space = 0
-            face_info = {}
             for x, y, w, h in faces :
                 if w*h > space :
                     space = w*h

@@ -16,7 +16,7 @@ def init_socket(sock, readsocks, socket_dict):
 	readsocks.append(newsock)
 	newsock.sendall("완료!".encode('utf-8'))
 	socket_dict[newsock] = data
-	print(socket_dict)
+	# print(socket_dict)
 
 def get_key(my_dict, my_value):
 	for x, y in my_dict.items() :
