@@ -8,7 +8,7 @@ import cv2
 
 # opencv python 코딩 기본 틀
 # 카메라 영상을 받아올 객체 선언 및 설정(영상 소스, 해상도 설정)
-capture = cv2.VideoCapture(1)
+capture = cv2.VideoCapture(-1)
 capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
@@ -31,6 +31,7 @@ while True:
     if len(faces) :
         for  x, y, w, h in faces :
             cv2.rectangle(frame, (x, y), (x + w, y + h), (255,255,255), 2, cv2.LINE_4)
+            print("x : {} y : {} w : {} h : {}".format(x,y,w,h))
     '''if len(eyes) :
         for  x, y, w, h in eyes :
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0,0,255), 2, cv2.LINE_4)'''
