@@ -34,17 +34,20 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # 영상을 흑백으로 바꿔줌
         faces = face_cascade.detectMultiScale(gray, scaleFactor= 1.5, minNeighbors=3, minSize=(20,20))
         face_info = {}
+        space = 0
+        i = 0
         if len(faces) :
             i = len(faces)
-            space = 0
             for x, y, w, h in faces :
-                if w*h > space :
+                if int(w*h) > space :
                     space = w*h
                     face_info['x'] = x
                     face_info['y'] = y
                     face_info['w'] = w
                     face_info['h'] = h
-        face_info['i'] = i
-        data = dict_to_str(face_info)
-        s.sendall(data.encode('utf-8'))
-        data = s.recv(1024).decode('utf-8')
+            face_info['i'] = i
+            face_info['x'] = face_info['x'] - 320
+            face_info['y'] = face_info['y'] - 240
+            data = dict_to_str(face_info)
+            s.sendall(data.encode('utf-8'))
+            data = s.recv(1024).decode('utf-8')

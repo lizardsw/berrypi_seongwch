@@ -33,6 +33,15 @@ def str_to_dict(dict_str):
 			my_dict[temp[0]] = int(temp[1])
 	return my_dict
 
+def dict_to_str(my_dict):
+	dict_str = ""
+	for x, y in my_dict.items() :
+		dict_str += str(x)
+		dict_str += "="
+		dict_str += str(y)
+		dict_str += ";"
+	return (dict_str)
+
 face_locate = {}
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
@@ -53,12 +62,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					conn.sendall("ok!".encode('utf-8'))
 					#print("opencv" + data)
 					data = str_to_dict(data)
-					face_locate['x'] = data['x'] + data['w'] / 2
-					face_locate['y'] = data['y'] + data['h'] / 2
+					face_locate['x'] = data['x']
+					face_locate['y'] = data['y']
 					print(data)
 					print(face_locate)
-					#servo_cnn = get_key(socket_dict, "servo")
-					#servo_cnn.sendall(data.encode('utf-8'))
+					servo_cnn = get_key(socket_dict, "servo")
+					data = dict_to_str(face_locate)
+					servo_cnn.sendall(data.encode('utf-8'))
 				elif (socket_dict[sock] == "servo") :
 					conn = sock
 					conn = sock

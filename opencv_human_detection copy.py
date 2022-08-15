@@ -5,6 +5,7 @@
 #
 
 import cv2
+import time
 
 # opencv python 코딩 기본 틀
 # 카메라 영상을 받아올 객체 선언 및 설정(영상 소스, 해상도 설정)
@@ -30,8 +31,9 @@ while True:
     # 얼굴 영역을 영상에 사각형으로 표시
     if len(faces) :
         for  x, y, w, h in faces :
+            print(x,y,w,h)
             cv2.rectangle(frame, (x, y), (x + w, y + h), (255,255,255), 2, cv2.LINE_4)
-            print("x : {} y : {} w : {} h : {}".format(x,y,w,h))
+            print("{}".format(h * w))
     '''if len(eyes) :
         for  x, y, w, h in eyes :
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0,0,255), 2, cv2.LINE_4)'''

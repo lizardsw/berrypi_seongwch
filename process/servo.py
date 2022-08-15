@@ -10,19 +10,20 @@ def init_socket(s):
     end = s.recv(1024).decode('utf-8')
     print(end)
 
-def dict_to_str(my_dict):
-	dict_str = ""
-	for x, y in my_dict.items() :
-		dict_str += str(x)
-		dict_str += "="
-		dict_str += str(y)
-		dict_str += ";"
-	return (dict_str)
+def str_to_dict(dict_str):
+	split_data = dict_str.split(";")
+	my_dict = {}
+	for x in split_data :
+		if (x != ""):
+			temp = x.split('=')
+			my_dict[temp[0]] = int(temp[1])
+	return my_dict
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	init_socket(s)
 	while True :
 		data = s.recv(1024).decode('utf-8')
+		data = str_to_dict(data)
 		print(data)
 
 
