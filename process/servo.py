@@ -3,6 +3,7 @@ from servo_util import set_angle
 import socket
 import Adafruit_PCA9685
 
+ABS_value = 20
 HOST = 'localhost'
 PORT = 50008
 pwm = Adafruit_PCA9685.PCA9685(address=0x40, busnum=1)
@@ -12,6 +13,7 @@ servo_max = 650  # Max pulse length out of 4096
 
 current_servo_x = 90
 current_servo_y = 50
+
 
 def init_socket(s):
 	s.connect((HOST, PORT))
@@ -31,17 +33,20 @@ def str_to_dict(dict_str):
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	init_socket(s)
+	set_angle(pwm, 0, current_servo_x)
+	set_angle(pwm, 1, current_servo_y)
 	while True :
 		data = s.recv(1024).decode('utf-8')
 		data = str_to_dict(data)
-		if (abs(data['x']) > 30) :
+		print(data)
+		if (abs(data['x']) > ABS_value) :
 			if (data['x'] < 0) :
 				current_servo_x += 1
 				set_angle(pwm, 0, current_servo_x)
 			else :
 				current_servo_x -= 1
 				set_angle(pwm, 0, current_servo_y)
-		if (abs(data['y']) > 30) :
+		if (abs(data['y']) > ABS_value) :
 			if (data['y'] < 0) :
 				current_servo_y += 1
 				set_angle(pwm, 1, current_servo_y)
