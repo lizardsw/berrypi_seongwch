@@ -22,7 +22,7 @@ def get_key(my_dict, my_value):
 	for x, y in my_dict.items() :
 		if y == my_value:
 			return x
-	return 0
+	return -1
 
 def str_to_dict(dict_str):
 	split_data = dict_str.split(";")
@@ -66,9 +66,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					face_locate['y'] = data['y']
 					print(data)
 					print(face_locate)
-					servo_cnn = get_key(socket_dict, "servo")
 					data = dict_to_str(face_locate)
-					servo_cnn.sendall(data.encode('utf-8'))
+					servo_cnn = get_key(socket_dict, "servo")
+					if (servo_cnn != -1) :
+						servo_cnn.sendall(data.encode('utf-8'))
 				elif (socket_dict[sock] == "servo") :
 					conn = sock
 					conn = sock
