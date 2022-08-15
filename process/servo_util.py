@@ -22,3 +22,8 @@ def map(value, min_angle, max_angle, min_pulse, max_pulse):
 def set_angle(pwm, channel, angle):
     pulse = int(map(angle, 0, 180, servo_min, servo_max))
     pwm.set_pwm(channel, 0, pulse)
+    print("######{} : {} : {}#####".format(channel,angle, pulse))
+
+def set_pulse(pwm, channel, pulse):
+    pwm.set_pwm(channel, 0, pulse)
+    print("####{} : {}".format(channel, pulse))

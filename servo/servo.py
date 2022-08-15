@@ -16,7 +16,7 @@ print('Moving servo on channel 0, press Ctrl-C to quit...')
 while True:
     # Move servo on channel O between extremes.
     data = int(input("input :"))
-    set_angle(pwm, 1, data)
-
+    # set_angle(pwm, 0, data)
+    pwm.set_pwm(0, 0, data)
     # pwm.set_pwm(0, , servo_max)
 

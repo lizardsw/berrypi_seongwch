@@ -64,12 +64,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					data = str_to_dict(data)
 					face_locate['x'] = data['x']
 					face_locate['y'] = data['y']
+					face_locate['h'] = data['h']
 					print(data)
 					print(face_locate)
-					data = dict_to_str(face_locate)
+					send_data = dict_to_str(face_locate)
 					servo_cnn = get_key(socket_dict, "servo")
 					if (servo_cnn != -1) :
-						servo_cnn.sendall(data.encode('utf-8'))
+						if (data['h'] > 100) :
+							servo_cnn.sendall(send_data.encode('utf-8'))
 				elif (socket_dict[sock] == "servo") :
 					conn = sock
 					conn = sock
