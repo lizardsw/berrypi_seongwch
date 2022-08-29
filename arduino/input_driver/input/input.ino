@@ -21,9 +21,9 @@ int sending_serial()
 {
 	Serial.print("touch=");
 	Serial.print(cur_state[0]);
-	Serial.print("left=");
+	Serial.print(";left=");
 	Serial.print(cur_state[1]);
-	Serial.print("right=");
+	Serial.print(";right=");
 	Serial.println(cur_state[2]);
 }
 

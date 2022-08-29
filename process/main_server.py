@@ -9,6 +9,8 @@ import sys
 HOST = ''
 PORT = 50008
 
+is_person = 0;
+is_face_detect = 0;
 
 def init_socket(sock, readsocks, socket_dict):
 	newsock, addr = sock.accept()
@@ -72,6 +74,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					if (servo_cnn != -1) :
 						if (data['h'] > 100) :
 							servo_cnn.sendall(send_data.encode('utf-8'))
+				elif (socket_dict[sock] == 'input') :
+					conn = sock
+					data = conn.recv(1024).decode('utf-8')
+					conn.sendall("ok!".encode('utf-8'))
+					data = str_to_dict(data)
+					print(data)
 				elif (socket_dict[sock] == "servo") :
 					conn = sock
 					conn = sock
