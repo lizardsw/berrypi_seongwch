@@ -52,9 +52,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             data = dict_to_str(face_info)
             s.sendall(data.encode('utf-8'))
             data = s.recv(1024).decode('utf-8')
-        #cv2.imshow("original", frame)   # frame(카메라 영상)을 original 이라는 창에 띄워줌 
-        #if cv2.waitKey(1) == ord('q'):  # 키보드의 q 를 누르면 무한루프가 멈춤
-        #    break
+        cv2.imshow("original", frame)   # frame(카메라 영상)을 original 이라는 창에 띄워줌 
+        if cv2.waitKey(1) == ord('q'):  # 키보드의 q 를 누르면 무한루프가 멈춤
+           break
 
 #capture.release()                   # 캡처 객체를 없애줌
 #cv2.destroyAllWindows()             # 모든 영상 창을 닫아줌
