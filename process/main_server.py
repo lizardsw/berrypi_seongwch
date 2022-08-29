@@ -1,10 +1,15 @@
+from main_servoer_utils import init_socket, get_key, dict_to_str, str_to_dict
+from csv import writer
 import socket
 import select
 import random
 import time
 import signal
 import sys
-
+import schedule
+import numpy as np
+import pandas as pd
+import datetime
 
 HOST = ''
 PORT = 50008
@@ -12,39 +17,18 @@ PORT = 50008
 is_person = 0;
 is_face_detect = 0;
 
-def init_socket(sock, readsocks, socket_dict):
-	newsock, addr = sock.accept()
-	data = newsock.recv(1024).decode('utf-8')
-	readsocks.append(newsock)
-	newsock.sendall("완료!".encode('utf-8'))
-	socket_dict[newsock] = data
-	# print(socket_dict)
-
-def get_key(my_dict, my_value):
-	for x, y in my_dict.items() :
-		if y == my_value:
-			return x
-	return -1
-
-def str_to_dict(dict_str):
-	split_data = dict_str.split(";")
-	my_dict = {}
-	for x in split_data :
-		if (x != ""):
-			temp = x.split('=')
-			my_dict[temp[0]] = int(temp[1])
-	return my_dict
-
-def dict_to_str(my_dict):
-	dict_str = ""
-	for x, y in my_dict.items() :
-		dict_str += str(x)
-		dict_str += "="
-		dict_str += str(y)
-		dict_str += ";"
-	return (dict_str)
-
 face_locate = {}
+
+def write_input_data(fd_append, data):
+	now = datetime.datetime.now()
+	data_list = [now]
+	data_list = data_list + data
+	writer_object = writer(fd_append)
+	writer_object.writerow(data_list)
+
+def check_input_data(fd_read):
+	data = pd.read_csv(fd_read, index_col = 'time')
+	print(data.index[-1])
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 	s.bind((HOST, PORT)) # 소켓을 주소, 포트와 연결
@@ -52,7 +36,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 	print("서버 시작!") 
 	readsocks = [s]
 	socket_dict = {}
+	fd_append = open("./input_data.csv", 'a') # data_input fd값 open write
+	fd_read = open("./input_data.csv") # data_input fd 값 open read
+	schedule.every(2).seconds.do(check_input_data(fd_read))
 	while True :
+		schedule.run_pending()
 		readables, writeables, exceptions = select.select(readsocks, [], [])
 		for sock in readables:
 			if sock == s:
@@ -64,6 +52,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					conn.sendall("ok!".encode('utf-8'))
 					#print("opencv" + data)
 					data = str_to_dict(data)
+					is_person = 1
+					write_input_data(fd_append, ['opencv', 'detect'])
 					face_locate['x'] = data['x']
 					face_locate['y'] = data['y']
 					face_locate['h'] = data['h']
@@ -79,7 +69,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					data = conn.recv(1024).decode('utf-8')
 					conn.sendall("ok!".encode('utf-8'))
 					data = str_to_dict(data)
-					print(data)
+					write_input_data(fd_append, ['input_driver', 'detect'])
+					is_person = 1
 				elif (socket_dict[sock] == "servo") :
 					conn = sock
 					conn = sock
