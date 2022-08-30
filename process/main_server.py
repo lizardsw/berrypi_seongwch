@@ -41,9 +41,11 @@ def check_input_data():
 	data = pd.read_csv(fd_read, index_col = 'time')
 	time_str = data.index[-1]
 	fd_read.close
-	if (check_time(time_str) == 1):
-		is_person = 0
-		is_face_detect = 0
+	print(time_str)
+	print(type(time_str))
+	# if (check_time(time_str) == 1):
+	# 	is_person = 0
+	# 	is_face_detect = 0
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 	s.bind((HOST, PORT)) # 소켓을 주소, 포트와 연결
@@ -55,8 +57,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 	fd_read = open("./input_data.csv") # data_input fd 값 open read
 	schedule.every(2).seconds.do(check_input_data)
 	while True :
-		schedule.run_pending()
 		readables, writeables, exceptions = select.select(readsocks, [], [])
+		schedule.run_pending()
 		for sock in readables:
 			if sock == s:
 				init_socket(sock, readsocks, socket_dict)
