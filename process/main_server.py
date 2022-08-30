@@ -18,6 +18,15 @@ is_face_detect = 0;
 
 face_locate = {}
 
+def check_time(time_str) :
+	dateformat = "%Y-%m-%d %H:%M:%S"
+	time1 = datetime.datetime.now()
+	time2 = datetime.datetime.strptime(time_str, dateformat)
+	time_diff = (time1 - time2).seconds / 60
+	if (time_diff > 5) :
+		return (1)
+	return (0)
+
 def write_input_data(fd_append, data):
 	now = datetime.datetime.now()
 	data_list = [now]
@@ -26,10 +35,15 @@ def write_input_data(fd_append, data):
 	writer_object.writerow(data_list)
 
 def check_input_data():
+	global is_person
+	global is_face_detect
 	fd_read = open("./input_data.csv") # data_input fd 값 open read
 	data = pd.read_csv(fd_read, index_col = 'time')
-	print(data.index[-1])
+	time_str = data.index[-1]
 	fd_read.close
+	if (check_time(time_str) == 1):
+		is_person = 0
+		is_face_detect = 0
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 	s.bind((HOST, PORT)) # 소켓을 주소, 포트와 연결
