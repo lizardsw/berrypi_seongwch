@@ -17,27 +17,35 @@ def init_socket(s):
     print(end)
 
 def check_time(time_str) :
-	fd_read = open("./input_data.csv")
 	dateformat = "%Y-%m-%d %H:%M:%S"
 	time1 = datetime.datetime.now()
+	print(time1)
+	print(type(time_str))
 	time2 = datetime.datetime.strptime(time_str, dateformat)
+	print(time2)
 	time_diff = (time1 - time2).seconds / 60
 	return (time_diff)
 
-def check_input_data(s):
+def check_input_data():
 	fd_read = open("./input_data.csv") # data_input fd 값 open read
 	data = pd.read_csv(fd_read, index_col = 'time')
 	time_str = data.index[-1]
 	fd_read.close
 	print(time_str)
-	time_diff = check_time(time_str)
-	s.sendall(time_diff.encode('utf-8'))
+	time_diff = str(check_time(time_str))
+	# s.sendall(time_diff.encode('utf-8'))
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
-	init_socket(s)
-	schedule.every(2).seconds.do(check_input_data, s)
-	#schedule.every(1).minutes.do(check_input_data, s)
-	while True:
+schedule.every(4).seconds.do(check_input_data)
+
+while True:
 		schedule.run_pending()
+		time.sleep(1)
+# with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
+# 	init_socket(s)
+# 	schedule.every(4).seconds.do(check_input_data, s)
+# 	#schedule.every(1).minutes.do(check_input_data, s)
+# 	while True:
+# 		schedule.run_pending()
+# 		time.sleep(1)
 
 

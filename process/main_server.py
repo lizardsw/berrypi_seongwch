@@ -68,11 +68,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 				elif (socket_dict[sock] == 'schedule') :
 					conn = sock
 					data = conn.recv(1024).decode('utf-8')
-					conn.sendall("ok!".encode('utf-8'))
-					data = int(data)
-					if (data > 5):
-						is_face_detect = 0
-						is_person = 0
+					print(data)
+					print(type(data))
+					# if (data > 5):
+					# 	is_face_detect = 0
+					# 	is_person = 0
 				elif (socket_dict[sock] == "servo") :
 					conn = sock
 					conn = sock
