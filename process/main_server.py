@@ -20,6 +20,8 @@ face_locate = {}
 
 def write_input_data(fd_append, data):
 	now = datetime.datetime.now()
+	dateformat = "%Y-%m-%d %H:%M:%S"
+	now = now.strftime(dateformat)
 	data_list = [now]
 	data_list = data_list + data
 	writer_object = writer(fd_append)

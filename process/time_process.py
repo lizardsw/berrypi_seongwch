@@ -19,11 +19,9 @@ def init_socket(s):
 def check_time(time_str) :
 	dateformat = "%Y-%m-%d %H:%M:%S"
 	time1 = datetime.datetime.now()
-	print(time1)
-	print(type(time_str))
+	now_time = time1.strftime(dateformat)
 	time2 = datetime.datetime.strptime(time_str, dateformat)
-	print(time2)
-	time_diff = (time1 - time2).seconds / 60
+	time_diff = (now_time - time2).seconds / 60
 	return (time_diff)
 
 def check_input_data():
