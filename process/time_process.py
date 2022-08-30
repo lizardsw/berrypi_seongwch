@@ -23,8 +23,7 @@ def check_time(time_str) :
 	now_time = datetime.datetime.strptime(now_time, dateformat)
 	time2 = datetime.datetime.strptime(time_str, dateformat)
 	time_diff = (now_time - time2).seconds / 60
-	print()
-	return (time_diff)
+	return (int(time_diff))
 
 def check_input_data(s):
 	fd_read = open("./input_data.csv") # data_input fd 값 open read
@@ -33,7 +32,7 @@ def check_input_data(s):
 	fd_read.close
 	time_diff = check_time(time_str)
 	print(time_diff)
-	s.sendall(time_diff.encode('utf-8'))
+	s.sendall(str(time_diff).encode('utf-8'))
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :

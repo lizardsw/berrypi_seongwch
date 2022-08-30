@@ -34,7 +34,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 	print("서버 시작!") 
 	readsocks = [s]
 	socket_dict = {}
-	fd_append = open("./input_data.csv", 'a') # data_input fd값 open write
 	while True :
 		readables, writeables, exceptions = select.select(readsocks, [], [])
 		for sock in readables:
@@ -48,7 +47,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					#print("opencv" + data)
 					data = str_to_dict(data)
 					is_person = 1
+					fd_append = open("./input_data.csv", 'a') # data_input fd값 open write
 					write_input_data(fd_append, ['opencv', 'detect'])
+					fd_append.close
 					face_locate['x'] = data['x']
 					face_locate['y'] = data['y']
 					face_locate['h'] = data['h']
@@ -65,13 +66,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					conn.sendall("ok!".encode('utf-8'))
 					data = str_to_dict(data)
 					print(data)
+					fd_append = open("./input_data.csv", 'a') # data_input fd값 open write
 					write_input_data(fd_append, ['input_driver', 'detect'])
+					fd_append.close
 					is_person = 1
 				elif (socket_dict[sock] == 'schedule') :
 					conn = sock
 					data = conn.recv(1024).decode('utf-8')
 					print(data)
-					print(type(data))
+					print(int(data))
 					# if (data > 5):
 					# 	is_face_detect = 0
 					# 	is_person = 0
