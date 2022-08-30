@@ -18,15 +18,6 @@ is_face_detect = 0;
 
 face_locate = {}
 
-def check_time(time_str) :
-	dateformat = "%Y-%m-%d %H:%M:%S"
-	time1 = datetime.datetime.now()
-	time2 = datetime.datetime.strptime(time_str, dateformat)
-	time_diff = (time1 - time2).seconds / 60
-	if (time_diff > 5) :
-		return (1)
-	return (0)
-
 def write_input_data(fd_append, data):
 	now = datetime.datetime.now()
 	data_list = [now]
@@ -34,18 +25,6 @@ def write_input_data(fd_append, data):
 	writer_object = writer(fd_append)
 	writer_object.writerow(data_list)
 
-def check_input_data():
-	global is_person
-	global is_face_detect
-	fd_read = open("./input_data.csv") # data_input fd 값 open read
-	data = pd.read_csv(fd_read, index_col = 'time')
-	time_str = data.index[-1]
-	fd_read.close
-	print(time_str)
-	print(type(time_str))
-	# if (check_time(time_str) == 1):
-	# 	is_person = 0
-	# 	is_face_detect = 0
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 	s.bind((HOST, PORT)) # 소켓을 주소, 포트와 연결
@@ -54,11 +33,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 	readsocks = [s]
 	socket_dict = {}
 	fd_append = open("./input_data.csv", 'a') # data_input fd값 open write
-	fd_read = open("./input_data.csv") # data_input fd 값 open read
-	schedule.every(2).seconds.do(check_input_data)
 	while True :
 		readables, writeables, exceptions = select.select(readsocks, [], [])
-		schedule.run_pending()
 		for sock in readables:
 			if sock == s:
 				init_socket(sock, readsocks, socket_dict)
@@ -89,6 +65,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					print(data)
 					write_input_data(fd_append, ['input_driver', 'detect'])
 					is_person = 1
+				elif (socket_dict[sock] == 'schedule') :
+					conn = sock
+					data = conn.recv(1024).decode('utf-8')
+					conn.sendall("ok!".encode('utf-8'))
+					data = int(data)
+					if (data > 5):
+						is_face_detect = 0
+						is_person = 0
 				elif (socket_dict[sock] == "servo") :
 					conn = sock
 					conn = sock
