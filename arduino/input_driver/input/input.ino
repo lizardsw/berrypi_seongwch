@@ -6,8 +6,8 @@ pir_left: (0,1,2) , pir_right : (0,1,2) , touch : (0,1,2)
 */
 
 CapacitiveSensor touch_input = CapacitiveSensor(4,5);
-#define LEFT_PIR_PIN 3
-#define RIGHT_PIR_PIN 2
+#define LEFT_PIR_PIN 2
+#define RIGHT_PIR_PIN 3
 
 
 long	touch_sensor;
