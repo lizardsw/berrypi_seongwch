@@ -2,14 +2,15 @@ from __future__ import division
 from servo_util import set_angle, set_pulse
 import socket
 import Adafruit_PCA9685
+import time
 
 ABS_value = 10
 HOST = 'localhost'
 PORT = 50008
 pwm = Adafruit_PCA9685.PCA9685(address=0x40, busnum=1)
 
-servo_min = 150  # Min pulse length out of 4096
-servo_max = 650  # Max pulse length out of 4096
+servo_min = 650  # Min pulse length out of 4096
+servo_max = 2000  # Max pulse length out of 4096
 
 current_servo_x = 90
 current_servo_y = 60
@@ -86,17 +87,31 @@ def detect_face_servo(pwm, data):
 	else :
 		y_on = 1
 
+def ear_servo(pwm, angle):
+	set_angle(pwm, 2, angle)
+	set_angle(pwm, 3, 180 - angle)
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-	init_socket(s)
-	set_angle(pwm, 0, current_servo_x)
-	set_angle(pwm, 1, current_servo_y)
-	i = 0
-	while True :
-		data = s.recv(1024).decode('utf-8')
-		data = str_to_dict(data)
-		print(data)
-		detect_face_servo(pwm, data)
+
+while 1 :
+	angle = int(input("input"))
+	# set_angle(pwm, 2, angle)
+	ear_servo(pwm, angle)
+
+
+
+
+
+
+# with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+# 	init_socket(s)
+# 	set_angle(pwm, 0, current_servo_x)
+# 	set_angle(pwm, 1, current_servo_y)
+# 	i = 0
+# 	while True :
+# 		data = s.recv(1024).decode('utf-8')
+# 		data = str_to_dict(data)
+# 		print(data)
+# 		detect_face_servo(pwm, data)
 		
 
 
