@@ -13,7 +13,9 @@ CapacitiveSensor touch_input = CapacitiveSensor(4,5);
 long	touch_sensor;
 int		left_pir_sensor;
 int		right_pir_sensor;
-int		no_touch = 0;
+unsigned int		no_touch = 0;
+unsigned int		ir_left_count = 0;
+unsigned int		ir_right_count = 0;
 int		pre_state[3] = {0, 0, 0};
 int		cur_state[3] = {0, 0, 0};
 int 	sensor_flag[3]; // [0] -> touch_flag [1] -> left_pir [2] -> right_pir
@@ -22,7 +24,7 @@ int sending_serial(int flag)
 {
 	Serial.print("flag=");
 	Serial.print(flag);
-	Serial.print("touch=");
+	Serial.print(";touch=");
 	Serial.print(cur_state[0]);
 	Serial.print(";left=");
 	Serial.print(cur_state[1]);
@@ -67,12 +69,34 @@ void loop () {
 		cur_state[0] = 0;
 		no_touch++;
 	}
+	if (cur_state[1] == 1)
+		ir_left_count++;
+	else 
+		ir_left_count = 0;
+	if (cur_state[2] == 1)
+		ir_right_count++;
+	else 
+		ir_right_count = 0;
 	if (check_flag() == 1)
 		sending_serial(0);
 	else if (check_flag() == 2)
 		sending_serial(1);
 	else if (no_touch == 6)
 		sending_serial(0);
+	else if (ir_left_count == 10)
+	{
+		ir_right_count += 20;
+		cur_state[1] = 0;
+		sending_serial(1);
+		cur_state[1] = 1;
+	}
+	else if (ir_right_count == 10)
+	{
+		ir_right_count += 20;
+		cur_state[2] = 0;
+		sending_serial(1);
+		cur_state[2] = 1;
+	}
 	pre_state[0] = cur_state[0];
 	pre_state[1] = cur_state[1];
 	pre_state[2] = cur_state[2];
