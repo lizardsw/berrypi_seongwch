@@ -1,5 +1,5 @@
 from __future__ import division 
-from servo_util import set_angle, set_pulse
+from servo_util import set_angle, set_pulse, angle_to_pulse, ear_servo, move_angle, touch_emotion
 import socket
 import Adafruit_PCA9685
 import time
@@ -87,31 +87,20 @@ def detect_face_servo(pwm, data):
 	else :
 		y_on = 1
 
-def ear_servo(pwm, angle):
-	set_angle(pwm, 2, angle)
-	set_angle(pwm, 3, 180 - angle)
-
-
-while 1 :
-	angle = int(input("input"))
-	# set_angle(pwm, 2, angle)
-	ear_servo(pwm, angle)
-
-
-
-
-
-
-# with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-# 	init_socket(s)
-# 	set_angle(pwm, 0, current_servo_x)
-# 	set_angle(pwm, 1, current_servo_y)
-# 	i = 0
-# 	while True :
-# 		data = s.recv(1024).decode('utf-8')
-# 		data = str_to_dict(data)
-# 		print(data)
-# 		detect_face_servo(pwm, data)
-		
-
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+	init_socket(s)
+	set_angle(pwm, 0, current_servo_x)
+	set_angle(pwm, 1, current_servo_y)
+	i = 0
+	while True :
+		data = s.recv(1024).decode('utf-8')
+		data = str_to_dict(data)
+		print(data)
+		if (data['emotion'] == 0):
+			detect_face_servo(pwm, data)
+		elif (data['emotion'] == 1):
+			if (data['value'] == 1):
+				ear_servo(pwm,0)
+			elif (data['value'] == 2):
+				touch_emotion(pwm, current_pulse_x, current_pulse_y)
 

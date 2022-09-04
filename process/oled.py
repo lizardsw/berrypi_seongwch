@@ -1,45 +1,38 @@
 import serial,time
 import socket
-    
+	
 my = []
 
-# HOST = 'localhost'
-# PORT = 50008
+HOST = 'localhost'
+PORT = 50008
 
+def init_socket(s):
+	s.connect((HOST, PORT))
+	sock_type = "oled"
+	s.sendall(sock_type.encode('utf-8'))
+	end = s.recv(1024).decode('utf-8')
+	print(end)
 
-# def init_socket(s):
-#     s.connect((HOST, PORT))
-#     sock_type = "input"
-#     s.sendall(sock_type.encode('utf-8'))
-#     end = s.recv(1024).decode('utf-8')
-#     print(end)
+def str_to_dict(dict_str):
+	split_data = dict_str.split(";")
+	my_dict = {}
+	for x in split_data :
+		if (x != ""):
+			temp = x.split('=')
+			my_dict[temp[0]] = int(temp[1])
+	return my_dict
 
-# print('Running. Press CTRL-C to exit.')
-# with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
-# 	init_socket(s)
-# 	with serial.Serial("/dev/ttyUSB0", 9600, timeout=1) as arduino:
-# 		time.sleep(0.1) #wait for serial to open
-# 		if arduino.isOpen():
-# 			print("{} connected!".format(arduino.port))
-# 			try:
-# 				while True:
-# 					while arduino.inWaiting()==0: pass
-# 					if  arduino.inWaiting()>0: 
-# 						answer=str(arduino.readline())
-# 						real = answer[2:-5]
-# 						real = real + ";"
-# 						s.sendall(real.encode('utf-8'))
-# 						arduino.flushInput() #remove data after reading
-# 			except KeyboardInterrupt:
-# 				print("KeyboardInterrupt has been caught.")
+print('Running. Press CTRL-C to exit.')
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
+	init_socket(s)
+	with serial.Serial("/dev/ttyUSB1", 9600, timeout=1) as arduino:
+		time.sleep(0.1) #wait for serial to open
+		if arduino.isOpen() :
+			print("{} connected!".format(arduino.port))
+			try:
+				while True:
+					data = s.recv(1024).decode('utf-8')
+					arduino.write(data.encode())    
+			except KeyboardInterrupt:
+				print("KeyboardInterrupt has been caught.")
 
-with serial.Serial("/dev/ttyUSB1", 9600, timeout=1) as arduino:
-    time.sleep(0.1) #wait for serial to open
-    if arduino.isOpen() :
-        print("{} connected!".format(arduino.port))
-        try:
-            while True:
-                cmd = input("Enter command : ")
-                arduino.write(cmd.encode())    
-        except KeyboardInterrupt:
-            print("KeyboardInterrupt has been caught.")

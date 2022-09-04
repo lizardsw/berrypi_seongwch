@@ -1,6 +1,7 @@
 #include "oled.h"
 
-char contain = 0;
+int contain = 0;
+int pre_contain = 0;
 
 void blinking(Adafruit_SSD1306 *display, int x = 0)
 {
@@ -11,10 +12,10 @@ void blinking(Adafruit_SSD1306 *display, int x = 0)
 		show_image(display, eyes, x);
 		my_delay(1000);
 		show_image(display, eyes_closed, x);
-		delay(50);
+		my_delay(50);
 	}
-	//show_image(display, eyes, x);
-	//delay(50);
+	show_image(display, eyes, x);
+	my_delay(50);
 }
 
 void show_image(Adafruit_SSD1306 *display, const unsigned char * image, int x = 0, int y = 0)
@@ -44,4 +45,36 @@ void scrolling(Adafruit_SSD1306 *display, int x, int y, const unsigned char * bi
 	now_eyes_x = x;
 	now_eyes_y = y;
 }
+*/
+//void testdrawchar(char c) {
+//  display.clearDisplay();
+
+//  display.setTextSize(1);      // Normal 1:1 pixel scale
+//  display.setTextColor(SSD1306_WHITE); // Draw white text
+//  display.setCursor(0, 0);     // Start at top-left corner
+//  display.cp437(true);         // Use full 256 char 'Code Page 437' font
+//	display.write(c);
+//  display.display();
+//  delay(2000);
+//}
+
+/*
+void eyes_cross()
+{
+	scrolling(25, -17, epd_bitmap_ROBOT, 5, 5);
+	scrolling(-25, -17, epd_bitmap_ROBOT, 5, 5);
+	scrolling(25, 17, epd_bitmap_ROBOT, 5, 5);
+}
+
+void eyes_earth_quake(int time)
+{
+	for (int i = 0; i < time; i++)
+	{
+		scrolling(10, 0, epd_bitmap_ROBOT, 5, 5);
+		delay(200);
+		scrolling(-10, 0, epd_bitmap_ROBOT, 5, 5);
+		delay(200);
+	}
+}
+
 */

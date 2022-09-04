@@ -44,22 +44,22 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					conn = sock
 					data = conn.recv(1024).decode('utf-8')
 					conn.sendall("ok!".encode('utf-8'))
-					#print("opencv" + data)
 					data = str_to_dict(data)
 					is_person = 1
 					fd_append = open("./input_data.csv", 'a') # data_input fd값 open write
 					write_input_data(fd_append, ['opencv', 'detect'])
-					fd_append.close
 					face_locate['x'] = data['x']
 					face_locate['y'] = data['y']
 					face_locate['h'] = data['h']
 					print(data)
 					print(face_locate)
+					face_locate['emotion'] = 0
 					send_data = dict_to_str(face_locate)
 					servo_cnn = get_key(socket_dict, "servo")
 					if (servo_cnn != -1) :
 						if (data['h'] > 100) :
 							servo_cnn.sendall(send_data.encode('utf-8'))
+					fd_append.close
 				elif (socket_dict[sock] == 'input') :
 					conn = sock
 					data = conn.recv(1024).decode('utf-8')
@@ -69,15 +69,20 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					fd_append = open("./input_data.csv", 'a') # data_input fd값 open write
 					write_input_data(fd_append, ['input_driver', 'detect'])
 					fd_append.close
+					servo_cnn = get_key(socket_dict, "servo")
+					oled_cnn = get_key(socket_dict, "oled")
+					if (data['touch'] == 1) :
+						servo_cnn.sendall("emotion:1;value:1'".encode('utf-8'))
+						oled_cnn.sendall("6".encode('utf-8'))
 					is_person = 1
 				elif (socket_dict[sock] == 'schedule') :
 					conn = sock
 					data = conn.recv(1024).decode('utf-8')
 					print(data)
 					print(int(data))
-					# if (data > 5):
-					# 	is_face_detect = 0
-					# 	is_person = 0
+					if (data > 5):
+						is_face_detect = 0
+						is_person = 0
 				elif (socket_dict[sock] == "servo") :
 					conn = sock
 					conn = sock
