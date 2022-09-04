@@ -106,4 +106,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 				ear_servo(pwm,0)
 			elif (data['value'] == 2):
 				touch_emotion(pwm, current_pulse_x, current_pulse_y)
+			elif (data['value'] == 3):
+				touch_emotion(pwm, current_pulse_x, current_pulse_y)
 
