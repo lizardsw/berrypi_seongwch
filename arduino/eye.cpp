@@ -1,29 +1,5 @@
 #include "oled.h"
 
-int contain = 0;
-int pre_contain = 0;
-
-void blinking(Adafruit_SSD1306 *display, int x = 0)
-{
-	int count = random(3);
-	
-	for (int i = 0; i < count + 1; i++)
-	{
-		show_image(display, eyes, x);
-		my_delay(1000);
-		show_image(display, eyes_closed, x);
-		my_delay(50);
-	}
-	show_image(display, eyes, x);
-	my_delay(50);
-}
-
-void show_image(Adafruit_SSD1306 *display, const unsigned char * image, int x = 0, int y = 0)
-{
-	display -> clearDisplay();
-	display -> drawBitmap(x,y,image, 128, 64, 1);
-	display -> display();
-}
 
 /*
 void scrolling(Adafruit_SSD1306 *display, int x, int y, const unsigned char * bitmap, int delay_time, int speed)

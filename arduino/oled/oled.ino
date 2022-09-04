@@ -10,9 +10,10 @@ const unsigned char* epd_bitmap_allArray[1] = {
 };
 */
 
-extern int contain;
-extern int pre_contain;
+int contain;
+
 int incomingByte = 0;
+int flag = 0;
 void setup() {
 	Serial.begin(9600);
 
@@ -37,7 +38,6 @@ void setup() {
 	pinMode(3, OUTPUT);
 	digitalWrite(3, LOW);
 	contain = 0;
-	pre_contain = 0;
 }
 /*
 int 값을 넣어주는데..
@@ -96,6 +96,7 @@ void loop() {
 		show_image(&display, eye_cute);
 		my_delay(4000);
 	}
+	flag = 0;
 }
 
 void receiveFromMaster(int bytes) {
@@ -128,11 +129,11 @@ void my_delay(int time)
 		{
 			incomingByte = Serial.read();
 			Serial.println(incomingByte);
+			flag = 1;
 			contain = incomingByte - 48;
 		}
-		if (pre_contain != contain)
+		if (flag == 1)
 		{
-			pre_contain = contain;
 			return ;
 		}
 		delay(1);
@@ -140,3 +141,26 @@ void my_delay(int time)
 	}
 }
 
+void blinking(Adafruit_SSD1306 *display, int x = 0)
+{
+	int count = random(3);
+	
+	for (int i = 0; i < count + 1; i++)
+	{
+		show_image(display, eyes, x);
+		my_delay(1000);
+		show_image(display, eyes_closed, x);
+		my_delay(50);
+		if (flag == 1)
+			break;
+	}
+	show_image(display, eyes, x);
+	my_delay(50);
+}
+
+void show_image(Adafruit_SSD1306 *display, const unsigned char * image, int x = 0, int y = 0)
+{
+	display -> clearDisplay();
+	display -> drawBitmap(x,y,image, 128, 64, 1);
+	display -> display();
+}
