@@ -79,21 +79,21 @@ void loop () {
 		ir_right_count = 0;
 	if (check_flag() == 1)
 		sending_serial(0);
+	else if (no_touch == 10)
+		sending_serial(0);
 	else if (check_flag() == 2)
 		sending_serial(1);
-	else if (no_touch == 6)
-		sending_serial(0);
-	else if (ir_left_count == 10)
+	else if (ir_left_count == 20)
 	{
-		ir_right_count += 20;
-		cur_state[1] = 0;
+		ir_right_count += 100;
+		cur_state[1] = 2;
 		sending_serial(1);
 		cur_state[1] = 1;
 	}
-	else if (ir_right_count == 10)
+	else if (ir_right_count == 20)
 	{
-		ir_right_count += 20;
-		cur_state[2] = 0;
+		ir_right_count += 100;
+		cur_state[2] = 2;
 		sending_serial(1);
 		cur_state[2] = 1;
 	}

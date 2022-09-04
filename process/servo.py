@@ -1,5 +1,5 @@
 from __future__ import division 
-from servo_util import set_angle, set_pulse, angle_to_pulse, ear_servo, move_angle, touch_emotion
+from servo_util import set_angle, set_pulse, angle_to_pulse, ear_servo, move_angle, touch_emotion, sleep_emotion
 import socket
 import Adafruit_PCA9685
 import time
@@ -13,8 +13,7 @@ pwm.set_pwm_freq(60)
 servo_min = 150  # Min pulse length out of 4096
 servo_max = 650  # Max pulse length out of 4096
 
-current_servo_x = 90
-current_servo_y = 60
+current_pulse = [400, 304]
 current_pulse_x = 400
 current_pulse_y = 304
 face_location = {}
@@ -58,9 +57,7 @@ def setting_i(data_abs, flag):
 			i = 7
 	return i
 
-def detect_face_servo(pwm, data):
-	global current_pulse_x
-	global current_pulse_y
+def detect_face_servo(pwm, data, current_pulse):
 	global x_on
 	global y_on
 	data_x_abs = abs(data['x'])
@@ -68,10 +65,10 @@ def detect_face_servo(pwm, data):
 	if (data_x_abs > ABS_value and x_on == 0) :
 		i = setting_i(data_x_abs, 0)
 		if (data['x'] < 0) :
-			current_pulse_x += i
+			current_pulse[0] += i
 		else :
-			current_pulse_x -= i
-		set_pulse(pwm, 0, current_pulse_x)
+			current_pulse[0] -= i
+		set_pulse(pwm, 0, current_pulse[0])
 	elif (data_x_abs > 100) :
 		x_on = 0
 	else :
@@ -79,10 +76,10 @@ def detect_face_servo(pwm, data):
 	if (data_y_abs > ABS_value and y_on == 0) :
 		i = setting_i(data_y_abs, 1)
 		if (data['y'] < 0) :
-			current_pulse_y += i
+			current_pulse[1] += i
 		else :
-			current_pulse_y -= i
-		set_pulse(pwm, 1, current_pulse_y)
+			current_pulse[1] -= i
+		set_pulse(pwm, 1, current_pulse[1])
 	elif (data_y_abs > 100) :
 		y_on = 0
 	else :
@@ -90,8 +87,8 @@ def detect_face_servo(pwm, data):
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	init_socket(s)
-	set_angle(pwm, 0, current_servo_x)
-	set_angle(pwm, 1, current_servo_y)
+	set_pulse(pwm, 0, current_pulse[0])
+	set_pulse(pwm, 1, current_pulse[1])
 	i = 0
 	while True :
 		data = s.recv(1024).decode('utf-8')
@@ -105,7 +102,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			elif (data['value'] == 1):
 				ear_servo(pwm,0)
 			elif (data['value'] == 2):
-				touch_emotion(pwm, current_pulse_x, current_pulse_y)
+				touch_emotion(pwm)
 			elif (data['value'] == 3):
-				touch_emotion(pwm, current_pulse_x, current_pulse_y)
+				sleep_emotion(pwm, current_pulse)
 

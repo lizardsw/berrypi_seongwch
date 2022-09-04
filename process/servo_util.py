@@ -44,5 +44,10 @@ def move_angle(pwm, channel, current, target_angle):
 	pwm.set_pwm(channel, 0, current + target)
 	return current + target
 
-def touch_emotion(pwm, current_x, current_y):
+def touch_emotion(pwm):
 	ear_servo(pwm, 110)
+
+def sleep_emotion(pwm, current_pulse):
+	ear_servo(pwm, 140)
+	set_pulse(pwm, 1, angle_to_pulse(30))
+	current_pulse[1] = angle_to_pulse(30)
