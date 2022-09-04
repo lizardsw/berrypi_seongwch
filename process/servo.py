@@ -22,6 +22,7 @@ face_location['y'] = 0
 
 x_on = 0
 y_on = 0
+sleep_mode = 0
 
 def init_socket(s):
 	s.connect((HOST, PORT))
@@ -97,6 +98,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 		if (data['emotion'] == 0):
 			detect_face_servo(pwm, data)
 		elif (data['emotion'] == 1):
+			if (sleep_mode == 1):
+				sleep_mode = 0
+				set_pulse(pwm, 1, angle_to_pulse(60))
+				current_pulse[1] = angle_to_pulse(60)
 			if (data['value'] == 0):
 				ear_servo(pwm, 30)
 			elif (data['value'] == 1):
@@ -104,5 +109,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			elif (data['value'] == 2):
 				touch_emotion(pwm)
 			elif (data['value'] == 3):
-				sleep_emotion(pwm, current_pulse)
+				if (sleep_mode != 1):
+					sleep_emotion(pwm, current_pulse)
+				sleep_mode = 1
 
