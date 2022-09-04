@@ -1,5 +1,5 @@
 
-servo_min = 150  # Min pulse length out of 4096
+servo_min = 150 # Min pulse length out of 4096
 servo_max = 650  # Max pulse length out of 4096
 
 # Helper function to make setting a servo pulse width simpler.

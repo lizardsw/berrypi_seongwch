@@ -17,7 +17,7 @@ def init_socket(s):
 print('Running. Press CTRL-C to exit.')
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 	init_socket(s)
-	with serial.Serial("/dev/ttyUSB0", 9600, timeout=1) as arduino:
+	with serial.Serial("/dev/ttyUSB1", 9600, timeout=1) as arduino:
 		time.sleep(0.1) #wait for serial to open
 		if arduino.isOpen():
 			print("{} connected!".format(arduino.port))

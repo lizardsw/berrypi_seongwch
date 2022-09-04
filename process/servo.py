@@ -8,9 +8,10 @@ ABS_value = 10
 HOST = 'localhost'
 PORT = 50008
 pwm = Adafruit_PCA9685.PCA9685(address=0x40, busnum=1)
+pwm.set_pwm_freq(60)
 
-servo_min = 650  # Min pulse length out of 4096
-servo_max = 2000  # Max pulse length out of 4096
+servo_min = 150  # Min pulse length out of 4096
+servo_max = 650  # Max pulse length out of 4096
 
 current_servo_x = 90
 current_servo_y = 60
@@ -99,7 +100,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 		if (data['emotion'] == 0):
 			detect_face_servo(pwm, data)
 		elif (data['emotion'] == 1):
-			if (data['value'] == 1):
+			if (data['value'] == 0):
+				ear_servo(pwm, 30)
+			elif (data['value'] == 1):
 				ear_servo(pwm,0)
 			elif (data['value'] == 2):
 				touch_emotion(pwm, current_pulse_x, current_pulse_y)

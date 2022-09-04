@@ -13,8 +13,8 @@ import datetime
 HOST = ''
 PORT = 50008
 
-is_person = 0;
-is_face_detect = 0;
+is_person = 0
+is_face_detect = 0
 
 face_locate = {}
 
@@ -72,8 +72,22 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					servo_cnn = get_key(socket_dict, "servo")
 					oled_cnn = get_key(socket_dict, "oled")
 					if (data['touch'] == 1) :
-						servo_cnn.sendall("emotion:1;value:1'".encode('utf-8'))
+						servo_cnn.sendall("emotion=1;value=1;".encode('utf-8'))
+						print("hello!")
 						oled_cnn.sendall("6".encode('utf-8'))
+						time.sleep(2)
+						print("bye!")
+						oled_cnn.sendall("0".encode('utf-8'))
+						servo_cnn.sendall("emotion=1;value=0;".encode('utf-8'))
+					elif(data['left'] == 1):
+						servo_cnn.sendall("emotion=1;value=1;".encode('utf-8'))
+						time.sleep(2)
+						servo_cnn.sendall("emotion=1;value=0;".encode('utf-8'))
+					elif(data['right'] == 1):
+						servo_cnn.sendall("emotion=1;value=1;".encode('utf-8'))
+						time.sleep(2)
+						servo_cnn.sendall("emotion=1;value=0;".encode('utf-8'))
+
 					is_person = 1
 				elif (socket_dict[sock] == 'schedule') :
 					conn = sock
