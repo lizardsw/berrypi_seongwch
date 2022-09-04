@@ -17,13 +17,10 @@ class I2CComm(object):
 
     def run(self):
         me = self.master
-        on_off = 1000
         while 1:
-            print(" {} \n".format(on_off))
             for addr in self.slave_addr_list:
                 try:
-                    me.write_byte(addr, int(on_off))
-                    on_off += 1
+                    me.write_byte(addr, int(0))
                 except IOError:
                     pass
             time.sleep(1)
