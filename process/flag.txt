@@ -1,0 +1,31 @@
+### main_server 
+
+- is_person
+0 -> no_person
+1 -> yes_person
+
+- sleep_mode
+0 -> no_sleep
+1 -> sleep
+
+- moving_mode
+0 -> 
+
+보내줄때의 상태에 대해서 해줘야합니다.
+- mode protocol이 필요하다.
+0 -> sleep
+1 -> normal
+2 -> moving
+
+### servo
+
+- emotion 
+0 -> detect_mode
+1 -> emotion_mode
+
+if emotion_mode
+value 
+0 -> ear_servo normal
+1 -> ear_servo detect
+2 -> touch_emotion (ear_servo detect)
+3 -> sleep_emotion (ear_servo, y servo down)

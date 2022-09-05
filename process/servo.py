@@ -111,5 +111,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			elif (data['value'] == 3):
 				if (sleep_mode != 1):
 					sleep_emotion(pwm, current_pulse)
+				time.sleep(1)
+				s.sendall("1".encode('utf-8'))
 				sleep_mode = 1
 
