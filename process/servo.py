@@ -97,7 +97,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 		print(data)
 		if (data['emotion'] == 0):
 			detect_face_servo(pwm, data)
-		elif (data['emotion'] == 1):
+		elif (data['emotion'] == 1): # emotion express
 			if (sleep_mode == 1):
 				sleep_mode = 0
 				set_pulse(pwm, 1, angle_to_pulse(60))
