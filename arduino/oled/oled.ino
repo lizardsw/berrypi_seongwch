@@ -96,6 +96,11 @@ void loop() {
 		show_image(&display, eye_cute);
 		my_delay(4000);
 	}
+	else if (contain == 7)
+	{
+		show_image(&display, eyes_love);
+		my_delay(4000);
+	}
 	flag = 0;
 }
 
