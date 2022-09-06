@@ -44,18 +44,18 @@ def setting_i(data_abs, flag):
 	i = 1
 	if (flag == 0) : 
 		if (data_abs > 50) :
-			i = 3
-		elif (data_abs > 100) :
 			i = 5
+		elif (data_abs > 100) :
+			i = 12
 		elif (data_abs > 150) :
-			i = 10
+			i = 18
 	else :
 		if (data_abs > 50) :
-			i = 2
-		elif (data_abs > 100) :
-			i = 5
-		elif (data_abs > 150) : 
-			i = 7
+			i = 4
+		elif (data_abs > 70) :
+			i = 8
+		elif (data_abs > 120) : 
+			i = 12
 	return i
 
 def detect_face_servo(pwm, data, current_pulse):
@@ -81,7 +81,7 @@ def detect_face_servo(pwm, data, current_pulse):
 		else :
 			current_pulse[1] -= i
 		set_pulse(pwm, 1, current_pulse[1])
-	elif (data_y_abs > 100) :
+	elif (data_y_abs > 60) :
 		y_on = 0
 	else :
 		y_on = 1
@@ -97,6 +97,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 		print(data)
 		if (data['emotion'] == 0):
 			detect_face_servo(pwm, data, current_pulse)
+			if (x_on == 1 and y_on == 1):
+				s.sendall("1".encode('utf-8'))
+			else :
+				s.sendall("0".encode('utf-8'))
 		elif (data['emotion'] == 1): # emotion express
 			if (sleep_mode == 1):
 				if (data['value'] == 0 or data['value'] == 3):
@@ -114,8 +118,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 				if (sleep_mode != 1):
 					sleep_emotion(pwm, current_pulse)
 					time.sleep(2.5)
-					s.sendall("1".encode('utf-8'))
+					s.sendall("2".encode('utf-8'))
 				else :
-					s.sendall("1".encode('utf-8'))
+					s.sendall("2".encode('utf-8'))
 				sleep_mode = 1
+			elif (data['value'] == 4):
+				for x in range(0, 4):
+					set_pulse(pwm, x, 0)
 

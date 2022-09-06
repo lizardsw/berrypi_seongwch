@@ -32,8 +32,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 			try:
 				while True:
 					data = s.recv(1024).decode('utf-8')
+					data = str_to_dict(data)
 					print(data)
-					arduino.write(data.encode())    
+					if (data["flag"] == 0) :
+						arduino.write(str(data["value"]).encode())  
+					elif (data["flag"] == 1) :
+						arduino.write(str(data["value"]).encode())
+						time.sleep(int(data['time']))
+						arduino.write("0".encode())
 			except KeyboardInterrupt:
 				print("KeyboardInterrupt has been caught.")
 

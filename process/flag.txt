@@ -29,3 +29,18 @@ value
 1 -> ear_servo detect
 2 -> touch_emotion (ear_servo detect)
 3 -> sleep_emotion (ear_servo, y servo down)
+
+servo _send flag
+0 -> no_face_detect
+1 -> yes_face_detect
+2 -> servo_time_the_end
+
+## oled
+0 -> blink
+1 -> scrowl
+2 -> close 
+3 -> sad 
+4 -> angry 
+5 -> happy
+6 -> cute 
+7 -> cute

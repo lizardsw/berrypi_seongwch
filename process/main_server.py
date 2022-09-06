@@ -9,6 +9,7 @@ import sys
 import schedule
 import pandas as pd
 import datetime
+import os
 
 HOST = ''
 PORT = 50008
@@ -44,23 +45,28 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 			if sock == s:
 				init_socket(sock, readsocks, socket_dict)
 			else :
-				if (socket_dict[sock] == "opencv") : 
-					conn = sock
-					data = conn.recv(1024).decode('utf-8')
-					conn.sendall("ok!".encode('utf-8'))
-					data = str_to_dict(data)
-					fd_append = open("./input_data.csv", 'a') # data_input fd값 open write
-					write_input_data(fd_append, ['opencv', 'detect'])
-					fd_append.close
-					face_locate['x'] = data['x']
-					face_locate['y'] = data['y']
-					face_locate['h'] = data['h']
-					print(data)
-					print(face_locate)
-					face_locate['emotion'] = 0
-					send_data = dict_to_str(face_locate)
-					servo_cnn = get_key(socket_dict, "servo")
-					if (servo_cnn != -1) :
+				if (socket_dict[sock] == "opencv") :
+					if (moving_mode == 0) : 
+						conn = sock
+						data = conn.recv(1024).decode('utf-8')
+						# conn.sendall("ok!".encode('utf-8'))
+						data = str_to_dict(data)
+						fd_append = open("./input_data.csv", 'a') # data_input fd값 open write
+						write_input_data(fd_append, ['opencv', 'detect'])
+						fd_append.close
+						face_locate['x'] = data['x']
+						face_locate['y'] = data['y']
+						face_locate['h'] = data['h']
+						print(face_locate)
+						face_locate['emotion'] = "0"
+						send_data = dict_to_str(face_locate)
+						servo_cnn = get_key(socket_dict, "servo")
+						oled_cnn = get_key(socket_dict, "oled")
+						# oled_cnn.sendall("flag=1;value=7;time=1".encode('utf-8'))
+						print("is_face_detect", is_face_detect)
+						if (is_face_detect == 1) :
+							is_face_detect = 2
+							oled_cnn.sendall("flag=1;value=7;time=1;".encode('utf-8'))
 						if (data['h'] > 100) :
 							servo_cnn.sendall(send_data.encode('utf-8'))
 				elif (socket_dict[sock] == 'input') :
@@ -78,10 +84,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 						fd_append.close
 						if (data['touch'] == 1) :
 							servo_cnn.sendall("emotion=1;value=1;".encode('utf-8'))
-							oled_cnn.sendall("6".encode('utf-8'))
+							oled_cnn.sendall("flag=0;value=6;".encode('utf-8'))
 						elif (data['touch'] == 0) :
 							servo_cnn.sendall("emotion=1;value=0;".encode('utf-8'))
-							oled_cnn.sendall("0".encode('utf-8'))
+							oled_cnn.sendall("flag=0;value=0;".encode('utf-8'))
 					elif (data['flag'] == 1): #ir sensor
 						if (moving_mode == 0) :
 							if (sleep_mode == 1):
@@ -95,10 +101,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 								servo_cnn.sendall("emotion=1;value=0;".encode('utf-8'))
 							elif(data['left'] == 1):
 								servo_cnn.sendall("emotion=1;value=1;".encode('utf-8'))
-								oled_cnn.sendall("0".encode('utf-8'))
+								oled_cnn.sendall("flag=0;value=0;".encode('utf-8'))
 							elif(data['right'] == 1):
 								servo_cnn.sendall("emotion=1;value=1;".encode('utf-8'))
-								oled_cnn.sendall("0".encode('utf-8'))
+								oled_cnn.sendall("flag=0;value=0;".encode('utf-8'))
 					is_person = 1
 				elif (socket_dict[sock] == 'schedule') :
 					conn = sock
@@ -109,21 +115,33 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 						oled_cnn = get_key(socket_dict, "oled")
 						is_face_detect = 0
 						is_person = 0
-						oled_cnn.sendall("2".encode('utf-8'))
+						oled_cnn.sendall("flag=0;value=2;".encode('utf-8'))
 						servo_cnn.sendall("emotion=1;value=3;".encode('utf-8'))
-						if (sleep_mode == 0) :	
+						if (sleep_mode == 0) :
 							moving_mode = 1
 						sleep_mode = 1 # sleep_mode 
 					else :
+						if (is_face_detect == 2):
+							is_face_detect = 1
 						sleep_mode = 0 # sleep_mode change
 					print("sleep:{} moving:{}is_person:{}".format(sleep_mode, moving_mode, is_person))
 				elif (socket_dict[sock] == "servo") :
 					conn = sock
-					conn = sock
-					data = conn.recv(1024).decode('utf-8')
-					print("moving_mode -> 0")
-					print(data)
-					moving_mode = 0
+					data = int(conn.recv(1024).decode('utf-8'))
+					if (data == 0):
+						is_face_detect = 0
+					elif (data == 1):
+						if (is_face_detect != 1 and is_face_detect != 2):
+							is_face_detect = 1
+							oled_cnn = get_key(socket_dict, "oled")
+							conn.sendall("emotion=1;value=4;".encode('utf-8'))
+							oled_cnn.sendall("flag=1;value=7;time=1;".encode('utf-8'))
+					elif (data == 2):
+						print("moving_mode -> 0")
+						moving_mode = 0
 					
 
 
+if __name__ == '__main__':
+	os.system("python3 oled.py")
+	

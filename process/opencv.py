@@ -1,5 +1,6 @@
 import socket
 import cv2
+import time
 
 capture = cv2.VideoCapture(-1)
 capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
@@ -50,11 +51,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             face_info['x'] = face_info['x'] + int(w/2) - 320
             face_info['y'] = face_info['y'] + int(h/2) - 240
             data = dict_to_str(face_info)
+            if (not data):
+                continue
             s.sendall(data.encode('utf-8'))
-            data = s.recv(1024).decode('utf-8')
+            # data = s.recv(1024).decode('utf-8')
         cv2.imshow("original", frame)   # frame(카메라 영상)을 original 이라는 창에 띄워줌 
         if cv2.waitKey(1) == ord('q'):  # 키보드의 q 를 누르면 무한루프가 멈춤
            break
+        time.sleep(0.01)
 
 #capture.release()                   # 캡처 객체를 없애줌
 #cv2.destroyAllWindows()             # 모든 영상 창을 닫아줌

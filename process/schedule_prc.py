@@ -41,6 +41,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 	#schedule.every(1).minutes.do(check_input_data, s)
 	while True:
 		schedule.run_pending()
-		time.sleep(1)
+		time.sleep(5)
 
 
