@@ -96,9 +96,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 		data = str_to_dict(data)
 		print(data)
 		if (data['emotion'] == 0):
-			detect_face_servo(pwm, data)
+			detect_face_servo(pwm, data, current_pulse)
 		elif (data['emotion'] == 1): # emotion express
 			if (sleep_mode == 1):
+				if (data['value'] == 0 or data['value'] == 3):
+					continue
 				sleep_mode = 0
 				set_pulse(pwm, 1, angle_to_pulse(60))
 				current_pulse[1] = angle_to_pulse(60)
@@ -111,7 +113,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			elif (data['value'] == 3):
 				if (sleep_mode != 1):
 					sleep_emotion(pwm, current_pulse)
-				time.sleep(1)
-				s.sendall("1".encode('utf-8'))
+					time.sleep(2.5)
+					s.sendall("1".encode('utf-8'))
+				else :
+					s.sendall("1".encode('utf-8'))
 				sleep_mode = 1
 
