@@ -31,7 +31,7 @@ def write_input_data(fd_append, data):
 	now = now.strftime(dateformat)
 	data_list = [now]
 	data_list = data_list + data
-	print("input : " ,data_list)
+	print("@@@@@@@@@@@@@@@@@@input : " ,data_list)
 	writer_object = writer(fd_append)
 	writer_object.writerow(data_list)
 
@@ -65,6 +65,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 						send_data = dict_to_str(face_locate)
 						servo_cnn = get_key(socket_dict, "servo")
 						oled_cnn = get_key(socket_dict, "oled")
+						face_detecting = 0
 						print("is_face_detect", is_face_focus)
 						if (is_face_focus == 1) :
 							is_face_focus = 2
@@ -77,7 +78,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					conn.sendall("ok!".encode('utf-8'))
 					data = str_to_dict(data)
 					print(data)
-					print("sleep:{} moving:{}is_person:{}".format(sleep_mode, moving_mode, is_person))
+					print("sleep:{} moving:{}is_person:{}detect:{}".format(sleep_mode, moving_mode, is_person,face_detecting))
 					servo_cnn = get_key(socket_dict, "servo")
 					oled_cnn = get_key(socket_dict, "oled")
 					if (data['flag'] == 0): #touch sensor
@@ -103,12 +104,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 							if(data['left'] == 2 or data['right'] == 2): # ear down
 								servo_cnn.sendall("emotion=1;value=0;".encode('utf-8'))
 								if (ir_person == 1) :
-									if (data['left'] == 2):
-										servo_cnn.sendall("emotion=1;value=5;angle=30".encode('utf-8'))
-										moving_mode = 1
-									elif (data['right'] == 2) :
-										servo_cnn.sendall("emotion=1;value=5;angle=-30".encode('utf-8'))
-										moving_mode = 1
+									if (face_detecting == 1) :
+										if (data['left'] == 2):
+											servo_cnn.sendall("emotion=1;value=5;angle=30".encode('utf-8'))
+											moving_mode = 1
+										elif (data['right'] == 2) :
+											servo_cnn.sendall("emotion=1;value=5;angle=-30".encode('utf-8'))
+											moving_mode = 1
 								ir_person = 0
 							elif(data['left'] == 1):
 								servo_cnn.sendall("emotion=1;value=1;".encode('utf-8'))
@@ -123,24 +125,22 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					conn = sock
 					data = int(conn.recv(1024).decode('utf-8'))
 					print(data)
-					if (data > 1):
+					if (data > 0):
 						servo_cnn = get_key(socket_dict, "servo")
 						oled_cnn = get_key(socket_dict, "oled")
 						is_face_focus = 0
 						is_person = 0
+						face_detecting = 1
 						oled_cnn.sendall("flag=0;value=2;".encode('utf-8'))
 						servo_cnn.sendall("emotion=1;value=3;".encode('utf-8'))
 						if (sleep_mode == 0) :
 							moving_mode = 1
 						sleep_mode = 1 # sleep_mode 
-					elif (data > 0) :
-						is_face_focus = 0
-						face_detecting = 1
-						servo_cnn = get_key(socket_dict, "servo")
-						oled_cnn = get_key(socket_dict, "oled")
 					else :
 						if (is_face_focus == 2):
 							is_face_focus = 1
+						if (is_face_focus == 0):
+							face_detecting == 1
 						sleep_mode = 0 # sleep_mode change
 					print("sleep:{} moving:{}is_person:{}".format(sleep_mode, moving_mode, is_person))
 				elif (socket_dict[sock] == "servo") :

@@ -14,8 +14,6 @@ servo_min = 150  # Min pulse length out of 4096
 servo_max = 650  # Max pulse length out of 4096
 
 current_pulse = [400, 304]
-current_pulse_x = 400
-current_pulse_y = 304
 face_location = {}
 face_location['x'] = 0
 face_location['y'] = 0
@@ -127,7 +125,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 					set_pulse(pwm, x, 0)
 			elif (data['value'] == 5):
 				move_angle(pwm, 0, current_pulse, data['angle'])
-				move_angle(pwm, 1, current_pulse, 60)
+				set_pulse(pwm, 1, angle_to_pulse(60))
+				current_pulse[1] = angle_to_pulse(60)
 				time.sleep(2.5)
 				s.sendall("2".encode('utf-8'))
 

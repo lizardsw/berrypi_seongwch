@@ -14,16 +14,24 @@ pwm.set_pwm_freq(60)
 
 current_pulse = [400, 304]
 
+def map(value, min_angle, max_angle, min_pulse, max_pulse):
+	angle_range = max_angle - min_angle
+	pulse_range = max_pulse - min_pulse
+	scale_factor = float(angle_range)/float(pulse_range)
+	return min_pulse + (value/scale_factor)
+
 def angle_to_pulse(angle):
 	pulse = int(map(angle, 0, 180, servo_min, servo_max))
+	print(pulse)
 	return (pulse)
+
 
 
 def move_angle(pwm, channel, current, target_angle):
 	if (target_angle < 0):
-		target = -(angle_to_pulse(-target_angle))
+		target = -(angle_to_pulse(-target_angle)) + 150
 	else :
-		target = angle_to_pulse(target_angle)
+		target = angle_to_pulse(target_angle) - 150
 	current[channel] = current[channel] + target
 	pwm.set_pwm(channel, 0, current[channel])
 
@@ -37,8 +45,9 @@ set_pulse(pwm, 1, current_pulse[1])
 while True:
     # Move servo on channel O between extremes.
     data = int(input("input :"))
-    # set_(pwm, 0, data)
-    move_angle(pwm, 0, current_pulse, data)
+    # angle_to_pulse(data)
+	# set_(pwm, 0, data)
+    move_angle(pwm, 1, current_pulse, data)
     print(current_pulse[0]," ",current_pulse[1])
     # pwm.set_pwm(0, , servo_max)
 

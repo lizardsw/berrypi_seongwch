@@ -39,9 +39,9 @@ def ear_servo(pwm, angle):
 
 def move_angle(pwm, channel, current, target_angle):
 	if (target_angle < 0):
-		target = -(angle_to_pulse(-target_angle))
+		target = -(angle_to_pulse(-target_angle)) + 150
 	else :
-		target = angle_to_pulse(target_angle)
+		target = angle_to_pulse(target_angle) - 150
 	current[channel] = current[channel] + target
 	pwm.set_pwm(channel, 0, current[channel])
 
