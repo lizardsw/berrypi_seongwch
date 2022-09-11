@@ -12,11 +12,33 @@ servo_max = 650  # Max pulse length out of 4096
 
 pwm.set_pwm_freq(60)
 
+current_pulse = [400, 304]
+
+def angle_to_pulse(angle):
+	pulse = int(map(angle, 0, 180, servo_min, servo_max))
+	return (pulse)
+
+
+def move_angle(pwm, channel, current, target_angle):
+	if (target_angle < 0):
+		target = -(angle_to_pulse(-target_angle))
+	else :
+		target = angle_to_pulse(target_angle)
+	current[channel] = current[channel] + target
+	pwm.set_pwm(channel, 0, current[channel])
+
+def set_pulse(pwm, channel, pulse):
+	pwm.set_pwm(channel, 0, pulse)
+	print("####{} : {}".format(channel, pulse))
+
 print('Moving servo on channel 0, press Ctrl-C to quit...')
+set_pulse(pwm, 0, current_pulse[0])
+set_pulse(pwm, 1, current_pulse[1])
 while True:
     # Move servo on channel O between extremes.
     data = int(input("input :"))
     # set_(pwm, 0, data)
-    pwm.set_pwm(0, 0, data)
+    move_angle(pwm, 0, current_pulse, data)
+    print(current_pulse[0]," ",current_pulse[1])
     # pwm.set_pwm(0, , servo_max)
 
