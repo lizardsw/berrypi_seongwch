@@ -112,9 +112,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 				ear_servo(pwm, 30)
 			elif (data['value'] == 1):
 				ear_servo(pwm,0)
-			elif (data['value'] == 2):
+			elif (data['value'] == 2): # touch 
 				touch_emotion(pwm)
-			elif (data['value'] == 3):
+			elif (data['value'] == 3): # sleep
 				if (sleep_mode != 1):
 					sleep_emotion(pwm, current_pulse)
 					time.sleep(2.5)
@@ -122,7 +122,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 				else :
 					s.sendall("2".encode('utf-8'))
 				sleep_mode = 1
-			elif (data['value'] == 4):
+			elif (data['value'] == 4): # zero
 				for x in range(0, 4):
 					set_pulse(pwm, x, 0)
+			elif (data['value'] == 5):
+				move_angle(pwm, 0, current_pulse, data['angle'])
+				move_angle(pwm, 1, current_pulse, 60)
+				time.sleep(2.5)
+				s.sendall("2".encode('utf-8'))
 

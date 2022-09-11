@@ -16,6 +16,7 @@ PORT = 50008
 
 is_person = 0
 is_face_detect = 0
+face_detecting = 0
 sleep_mode = 0
 moving_mode = 0
 detect_mode = 0
@@ -46,9 +47,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 				init_socket(sock, readsocks, socket_dict)
 			else :
 				if (socket_dict[sock] == "opencv") :
-					if (moving_mode == 0) : 
-						conn = sock
-						data = conn.recv(1024).decode('utf-8')
+					conn = sock
+					data = conn.recv(1024).decode('utf-8')
+					if (moving_mode == 0) : # if moving? no input
 						# conn.sendall("ok!".encode('utf-8'))
 						data = str_to_dict(data)
 						fd_append = open("./input_data.csv", 'a') # data_input fd값 open write
@@ -62,7 +63,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 						send_data = dict_to_str(face_locate)
 						servo_cnn = get_key(socket_dict, "servo")
 						oled_cnn = get_key(socket_dict, "oled")
-						# oled_cnn.sendall("flag=1;value=7;time=1".encode('utf-8'))
 						print("is_face_detect", is_face_detect)
 						if (is_face_detect == 1) :
 							is_face_detect = 2
@@ -83,7 +83,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 						write_input_data(fd_append, ['input_driver', 'detect'])
 						fd_append.close
 						if (data['touch'] == 1) :
-							servo_cnn.sendall("emotion=1;value=1;".encode('utf-8'))
+							servo_cnn.sendall("emotion=1;value=2;".encode('utf-8'))
 							oled_cnn.sendall("flag=0;value=6;".encode('utf-8'))
 						elif (data['touch'] == 0) :
 							servo_cnn.sendall("emotion=1;value=0;".encode('utf-8'))
@@ -110,7 +110,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 					conn = sock
 					data = int(conn.recv(1024).decode('utf-8'))
 					print(data)
-					if (data > 0):
+					if (data > 1):
 						servo_cnn = get_key(socket_dict, "servo")
 						oled_cnn = get_key(socket_dict, "oled")
 						is_face_detect = 0
@@ -120,6 +120,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 						if (sleep_mode == 0) :
 							moving_mode = 1
 						sleep_mode = 1 # sleep_mode 
+					elif (data > 0) :
+						is_face_detect = 0
+						servo_cnn = get_key(socket_dict, "servo")
+						oled_cnn = get_key(socket_dict, "oled")
+						oled_cnn.sendall("flag=0;value=1;".encode('utf-8'))
 					else :
 						if (is_face_detect == 2):
 							is_face_detect = 1

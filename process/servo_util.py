@@ -1,3 +1,4 @@
+import time
 
 servo_min = 150  # Min pulse length out of 4096
 servo_max = 650  # Max pulse length out of 4096
@@ -41,11 +42,14 @@ def move_angle(pwm, channel, current, target_angle):
 		target = -(angle_to_pulse(-target_angle))
 	else :
 		target = angle_to_pulse(target_angle)
-	pwm.set_pwm(channel, 0, current + target)
-	return current + target
+	current[channel] = current[channel] + target
+	pwm.set_pwm(channel, 0, current[channel])
 
 def touch_emotion(pwm):
 	ear_servo(pwm, 110)
+	time.sleep(1.5)
+	ear_servo(pwm, 40)
+
 
 def sleep_emotion(pwm, current_pulse):
 	ear_servo(pwm, 140)
