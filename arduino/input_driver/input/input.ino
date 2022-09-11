@@ -77,11 +77,11 @@ void loop () {
 		ir_right_count++;
 	else 
 		ir_right_count = 0;
-	if (check_flag() == 1)
+	if (check_flag() == 1) // touch sensor
 		sending_serial(0);
 	else if (no_touch == 10)
 		sending_serial(0);
-	else if (check_flag() == 2)
+	else if (check_flag() == 2) // ir sensor
 		sending_serial(1);
 	else if (ir_left_count == 20)
 	{
