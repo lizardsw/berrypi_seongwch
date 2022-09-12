@@ -11,9 +11,10 @@ const unsigned char* epd_bitmap_allArray[1] = {
 */
 
 int contain;
-
+int time[4] = {0,0,0,0};
 int incomingByte = 0;
 int flag = 0;
+char str_time[6];
 void setup() {
 	Serial.begin(9600);
 
@@ -101,6 +102,37 @@ void loop() {
 		show_image(&display, eyes_love);
 		my_delay(4000);
 	}
+	else if (contain == 8)
+	{
+		int i = 0;
+		int temp = 0;
+		while (i < 4)
+		{
+			if (Serial.available() > 0)
+			{
+				incomingByte = Serial.read();
+				Serial.println(incomingByte);
+				temp = incomingByte - 48;
+				time[i] = temp;
+				i++;
+			}
+		}
+		flag = 0;
+		Serial.print(time[0]);
+		Serial.print(time[1]);
+		Serial.print(":");
+		Serial.print(time[2]);
+		Serial.println(time[3]);
+		str_time[0] = time[0] + 48;
+		str_time[1] = time[1] + 48;
+		str_time[3] = time[2] + 48;
+		str_time[4] = time[3] + 48;
+		str_time[2] = ':';
+		str_time[5] = '\0';
+		show_time(str_time);
+		my_delay(2000);
+		contain = 0;
+	}
 	flag = 0;
 }
 
@@ -136,6 +168,8 @@ void my_delay(int time)
 			Serial.println(incomingByte);
 			flag = 1;
 			contain = incomingByte - 48;
+			Serial.print("my_delay catch!");
+			Serial.println(contain);
 		}
 		if (flag == 1)
 		{
@@ -168,4 +202,16 @@ void show_image(Adafruit_SSD1306 *display, const unsigned char * image, int x = 
 	display -> clearDisplay();
 	display -> drawBitmap(x,y,image, 128, 64, 1);
 	display -> display();
+}
+
+void show_time(char *my_time)
+{
+	display.clearDisplay();
+	display.setTextSize(4);             // Normal 1:1 pixel scale
+	display.setTextColor(SSD1306_WHITE);        // Draw white text
+	display.setCursor(4,15);             // Start at top-left corner
+	display.println(my_time);
+	//display.println(F("12:34"));
+	display.display();
+	Serial.println("show_time!");
 }

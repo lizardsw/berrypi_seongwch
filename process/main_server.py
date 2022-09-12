@@ -69,7 +69,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 						print("is_face_detect", is_face_focus)
 						if (is_face_focus == 1) :
 							is_face_focus = 2
-							oled_cnn.sendall("flag=1;value=7;time=1;".encode('utf-8'))
+							oled_cnn.sendall("flag=2;value=8;".encode('utf-8'))
+							#oled_cnn.sendall("flag=1;value=7;time=1;".encode('utf-8'))
 						if (data['h'] > 100) :
 							servo_cnn.sendall(send_data.encode('utf-8'))
 				elif (socket_dict[sock] == 'input') :

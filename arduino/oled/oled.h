@@ -653,4 +653,4 @@ void show_image(Adafruit_SSD1306 *, const unsigned char * image, int x = 0, int 
 void receiveFromMaster(int bytes);
 void sendToMaster();
 void my_delay(int time);
-
+void show_time(char *my_time);
