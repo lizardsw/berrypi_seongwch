@@ -38,31 +38,47 @@ def str_to_dict(dict_str):
 			my_dict[temp[0]] = int(temp[1])
 	return my_dict
 
-def setting_i(data_abs, flag):
+def setting_i(data_abs, flag, face):
 	i = 1
 	if (flag == 0) : 
-		if (data_abs > 50) :
-			i = 5
-		elif (data_abs > 100) :
-			i = 12
-		elif (data_abs > 150) :
-			i = 18
+		if (face > 200):
+			if (data_abs > 50) :
+				i = 5
+			elif (data_abs > 100) :
+				i = 12
+			elif (data_abs > 150) :
+				i = 18
+		else :
+			if (data_abs > 50) :
+				i = 3
+			elif (data_abs > 100) :
+				i = 7
+			elif (data_abs > 150) :
+				i = 10
 	else :
-		if (data_abs > 50) :
-			i = 4
-		elif (data_abs > 70) :
-			i = 8
-		elif (data_abs > 120) : 
-			i = 12
+		if (face > 200) :
+			if (data_abs > 50) :
+				i = 4
+			elif (data_abs > 70) :
+				i = 8
+			elif (data_abs > 120) : 
+				i = 12
+		else :
+			if (data_abs > 50) :
+				i = 2
+			elif (data_abs > 70) :
+				i = 4
+			elif (data_abs > 120) : 
+				i = 7
 	return i
 
-def detect_face_servo(pwm, data, current_pulse):
+def detect_face_servo(pwm, data, current_pulse, face_size):
 	global x_on
 	global y_on
 	data_x_abs = abs(data['x'])
 	data_y_abs = abs(data['y']) 
 	if (data_x_abs > ABS_value and x_on == 0) :
-		i = setting_i(data_x_abs, 0)
+		i = setting_i(data_x_abs, 0, face_size)
 		if (data['x'] < 0) :
 			current_pulse[0] += i
 		else :
@@ -73,7 +89,7 @@ def detect_face_servo(pwm, data, current_pulse):
 	else :
 		x_on = 1
 	if (data_y_abs > ABS_value and y_on == 0) :
-		i = setting_i(data_y_abs, 1)
+		i = setting_i(data_y_abs, 1, face_size)
 		if (data['y'] < 0) :
 			current_pulse[1] += i
 		else :
@@ -94,7 +110,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 		data = str_to_dict(data)
 		print(data)
 		if (data['emotion'] == 0):
-			detect_face_servo(pwm, data, current_pulse)
+			detect_face_servo(pwm, data, current_pulse, data['h'])
 			if (x_on == 1 and y_on == 1):
 				s.sendall("1".encode('utf-8'))
 			else :

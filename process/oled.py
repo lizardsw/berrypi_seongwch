@@ -51,15 +51,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 						time.sleep(int(data['time']))
 						arduino.write("0".encode())
 					elif (data['flag'] == 2):
-						arduino.write(str(data["value"]).encode()) 
+						arduino.write("8".encode()) 
 						now_time = send_time_now()
-						arduino.write(now_time[0][0].encode())
-						time.sleep(0.1)
-						arduino.write(now_time[0][1].encode())
-						time.sleep(0.1)	
-						arduino.write(now_time[1][0].encode())
-						time.sleep(0.1)
-						arduino.write(now_time[1][1].encode())
+						print(now_time)
+						send_data = now_time[0] + now_time[1]
+						print("@@@@@@", send_data, "@@@@")
+						arduino.write(send_data.encode())
 			except KeyboardInterrupt:
 				print("KeyboardInterrupt has been caught.")
 
