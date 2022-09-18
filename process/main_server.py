@@ -90,12 +90,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 						write_input_data(fd_append, ['input_driver', 'detect'])
 						fd_append.close
 						if (data['touch'] == 1) :
-							servo_cnn.sendall("emotion=1;value=2;".encode('utf-8'))
+							servo_cnn.sendall("emotion=1;value=2;type=1;".encode('utf-8'))
 							# oled_cnn.sendall("flag=2;value=8;".encode('utf-8'))
 							oled_cnn.sendall("flag=0;value=6;".encode('utf-8'))
 							oled_touching = 1
 						elif (data['touch'] == 0) :
-							servo_cnn.sendall("emotion=1;value=0;".encode('utf-8'))
+							servo_cnn.sendall("emotion=1;value=0;type=0;".encode('utf-8'))
 							oled_cnn.sendall("flag=0;value=0;".encode('utf-8'))
 							oled_touching = 0
 						is_person = 1

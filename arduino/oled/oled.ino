@@ -162,7 +162,7 @@ void my_delay(int time)
 	int i = 0;
 	while(i < time)
 	{
-		if (Serial.available() > 0) 
+		if (Serial.available() > 0 && contain != 8) 
 		{
 			incomingByte = Serial.read();
 			Serial.println(incomingByte);

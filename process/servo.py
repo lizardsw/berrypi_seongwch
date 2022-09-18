@@ -3,8 +3,10 @@ from servo_util import set_angle, set_pulse, angle_to_pulse, ear_servo, move_ang
 import socket
 import Adafruit_PCA9685
 import time
+import threading
 
 ABS_value = 10
+thread_flag = 0
 HOST = 'localhost'
 PORT = 50008
 pwm = Adafruit_PCA9685.PCA9685(address=0x40, busnum=1)
@@ -21,6 +23,22 @@ face_location['y'] = 0
 x_on = 0
 y_on = 0
 sleep_mode = 0
+
+def sub_thread(x_pulse, y_pulse):
+	global thread_flag
+	
+	while thread_flag == 1 :
+		ear_servo(pwm, 110)
+		for x in range(0, 10):
+			if (thread_flag == 0):
+				return
+			time.delay(0.1)
+		ear_servo(pwm, 40)
+		for x in range(0, 10):
+			if (thread_flag == 0):
+				return
+			time.delay(0.1)
+	return
 
 def init_socket(s):
 	s.connect((HOST, PORT))
@@ -127,7 +145,17 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			elif (data['value'] == 1):
 				ear_servo(pwm,0)
 			elif (data['value'] == 2): # touch 
-				touch_emotion(pwm)
+				if (data['type'] == 1): # start_touch
+					thread_flag = 1
+					sub_thread = threading.Thread(target = sub_thread)
+					sub_thread.daemon = True
+					sub_thread.start()
+				else :
+					thread_flag = 0 # finish_touch
+					time.sleep(0.1)
+					for x in range(0, 4):
+						set_pulse(pwm, x, 0)
+					ear_servo(pwm, 30)
 			elif (data['value'] == 3): # sleep
 				if (sleep_mode != 1):
 					sleep_emotion(pwm, current_pulse)
