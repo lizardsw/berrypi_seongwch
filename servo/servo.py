@@ -51,3 +51,34 @@ while True:
     print(current_pulse[0]," ",current_pulse[1])
     # pwm.set_pwm(0, , servo_max)
 
+
+#if (flag == 0) : 
+	#	if (face > 200):
+	#		if (data_abs > 50) :
+	#			i = 5
+	#		elif (data_abs > 100) :
+	#			i = 12
+	#		elif (data_abs > 150) :
+	#			i = 18
+	#	else :
+	#		if (data_abs > 50) :
+	#			i = 3
+	#		elif (data_abs > 100) :
+	#			i = 7
+	#		elif (data_abs > 150) :
+	#			i = 10
+# else :
+	# 	if (face > 200) :
+	# 		if (data_abs > 50) :
+	# 			i = 4
+	# 		elif (data_abs > 70) :
+	# 			i = 8
+	# 		elif (data_abs > 120) : 
+	# 			i = 12
+	# 	else :
+	# 		if (data_abs > 50) :
+	# 			i = 2
+	# 		elif (data_abs > 70) :
+	# 			i = 4
+	# 		elif (data_abs > 120) : 
+	# 			i = 7

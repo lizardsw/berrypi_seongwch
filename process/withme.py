@@ -3,7 +3,7 @@ import time
 import os
 
 subprocess.Popen(["python3", "main_server.py"])
-time.sleep(1)
+time.sleep(2)
 subprocess.Popen(["python3", "oled.py"])
 subprocess.Popen(["python3", "servo.py"])
 subprocess.Popen(["python3", "schedule_prc.py"])
