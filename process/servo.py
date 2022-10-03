@@ -4,6 +4,7 @@ import socket
 import Adafruit_PCA9685
 import time
 import threading
+import math
 
 ABS_value = 10
 thread_flag = 0
@@ -58,21 +59,26 @@ def str_to_dict(dict_str):
 
 def setting_i(data_abs, flag, face):
 	i = 1
-	if (flag == 0) : 
-		if (face > 200):
-			if (data_abs > 50) :
-				i = 5
-			elif (data_abs > 100) :
-				i = 12
-			elif (data_abs > 150) :
-				i = 18
+	#if (flag == 0) : 
+	#	if (face > 200):
+	#		if (data_abs > 50) :
+	#			i = 5
+	#		elif (data_abs > 100) :
+	#			i = 12
+	#		elif (data_abs > 150) :
+	#			i = 18
+	#	else :
+	#		if (data_abs > 50) :
+	#			i = 3
+	#		elif (data_abs > 100) :
+	#			i = 7
+	#		elif (data_abs > 150) :
+	#			i = 10
+	if (flag == 0) :
+		if (face > 200) :
+			i = int(pow((1.2), (data_abs - 10 / 10)))
 		else :
-			if (data_abs > 50) :
-				i = 3
-			elif (data_abs > 100) :
-				i = 7
-			elif (data_abs > 150) :
-				i = 10
+			i = int(pow((1.1), (data_abs - 10 / 10))) 
 	else :
 		if (face > 200) :
 			if (data_abs > 50) :
