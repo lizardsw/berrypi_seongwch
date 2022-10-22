@@ -17,6 +17,8 @@ PORT = 50008
 is_person = 0
 is_face_focus = 0
 face_detecting = 0
+first_face = 0
+
 ir_person = 0
 sleep_mode = 0
 moving_mode = 0
@@ -67,15 +69,24 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 						servo_cnn = get_key(socket_dict, "servo")
 						oled_cnn = get_key(socket_dict, "oled")
 						face_detecting = 0
+						if (first_face == 0):
+							servo_cnn.sendall("emotion=1;value=1;".encode('utf-8'))
+							first_face = 1
 						print("is_face_detect", is_face_focus)
 						if (is_face_focus == 1) :
 							is_face_focus = 2
-							if (oled_touching == 0) :
-								oled_cnn.sendall("flag=2;value=8;".encode('utf-8'))
+							first_face = 0
+							random_x = random.randint(0,2)
+							if (oled_touching == 0) :# random put please!
+								if (random_x == 0):
+									oled_cnn.sendall("flag=2;value=8;".encode('utf-8'))
+								elif (random_x == 1):
+									oled_cnn.sendall("flag=2;value=5;".encode('utf-8'))
+								elif (random_x == 2):
+									oled_cnn.sendall("flag=2;value=7;".encode('utf-8'))
 								# oled_cnn.sendall("flag=1;value=7;time=1;".encode('utf-8'))
-						if (data['h'] > 100) :
-							print(send_data)
-							servo_cnn.sendall(send_data.encode('utf-8'))
+						print(send_data)
+						servo_cnn.sendall(send_data.encode('utf-8'))
 				elif (socket_dict[sock] == 'input') :
 					conn = sock
 					data = conn.recv(1024).decode('utf-8')
@@ -137,6 +148,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 						oled_cnn = get_key(socket_dict, "oled")
 						is_face_focus = 0
 						is_person = 0
+						first_face = 0
 						face_detecting = 1
 						oled_cnn.sendall("flag=0;value=2;".encode('utf-8'))
 						servo_cnn.sendall("emotion=1;value=3;".encode('utf-8'))
@@ -157,7 +169,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 						is_face_focus = 0
 					elif (data == 1):
 						if (is_face_focus != 1 and is_face_focus != 2):
-							is_face_focus = 1
+							is_face_focus = 2
 							print("catch face!")
 							oled_cnn = get_key(socket_dict, "oled")
 							conn.sendall("emotion=1;value=4;".encode('utf-8'))

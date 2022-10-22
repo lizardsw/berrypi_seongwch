@@ -104,13 +104,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 				sleep_mode = 0
 				set_pulse(pwm, 1, angle_to_pulse(60))
 				current_pulse[1] = angle_to_pulse(60)
-			if (data['value'] == 0):
+			if (data['value'] == 0): # normal
 				ear_servo(pwm, 30)
-			elif (data['value'] == 1):
+			elif (data['value'] == 1): #surprise
 				ear_servo(pwm,0)
 			elif (data['value'] == 2): # touch 
 				if (data['type'] == 1): # start_touch
-					ear_servo(pwm, 110)
+					ear_servo(pwm, 100)
 				else :# finish_touch
 					time.sleep(0.1)
 					for x in range(0, 4):
