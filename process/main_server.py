@@ -78,12 +78,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 							first_face = 0
 							random_x = random.randint(0,2)
 							if (oled_touching == 0) :# random put please!
+								print("----hello! oled!---")
 								if (random_x == 0):
 									oled_cnn.sendall("flag=2;value=8;".encode('utf-8'))
 								elif (random_x == 1):
-									oled_cnn.sendall("flag=2;value=5;".encode('utf-8'))
+									oled_cnn.sendall("flag=0;value=5;time=2;".encode('utf-8'))
 								elif (random_x == 2):
-									oled_cnn.sendall("flag=2;value=7;".encode('utf-8'))
+									oled_cnn.sendall("flag=0;value=7;time=2;".encode('utf-8'))
 								# oled_cnn.sendall("flag=1;value=7;time=1;".encode('utf-8'))
 						print(send_data)
 						servo_cnn.sendall(send_data.encode('utf-8'))
