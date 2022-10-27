@@ -59,7 +59,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             data = dict_to_str(face_info)
             if (not data):
                 continue
-            if (face_info['h'] > 150):
+            if (face_info['h'] > 100):
                 s.sendall(data.encode('utf-8'))
             # data = s.recv(1024).decode('utf-8')
         cv2.imshow("original", frame)   # frame(카메라 영상)을 original 이라는 창에 띄워줌 

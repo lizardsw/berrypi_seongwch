@@ -90,7 +90,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	while True :
 		data = s.recv(1024).decode('utf-8')
 		data = str_to_dict(data)
-		print(data)
+		# print(data)
 		if (data['emotion'] == 0):
 			detect_face_servo(pwm, data, current_pulse, data['h'])
 			if (x_on == 1 and y_on == 1):
@@ -98,6 +98,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			else :
 				s.sendall("0".encode('utf-8'))
 		elif (data['emotion'] == 1): # emotion express
+			print("servo", data)
 			if (sleep_mode == 1):
 				if (data['value'] == 0 or data['value'] == 3):
 					continue
@@ -110,7 +111,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 				ear_servo(pwm,0)
 			elif (data['value'] == 2): # touch 
 				if (data['type'] == 1): # start_touch
-					ear_servo(pwm, 100)
+					ear_servo(pwm, 110)
 				else :# finish_touch
 					time.sleep(0.1)
 					for x in range(0, 4):

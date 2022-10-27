@@ -34,7 +34,7 @@ def write_input_data(fd_append, data):
 	now = now.strftime(dateformat)
 	data_list = [now]
 	data_list = data_list + data
-	print("@@@@@@@@@@@@@@@@@@input : " ,data_list)
+	# print("@@@@@@@@@@@@@@@@@@input : " ,data_list)
 	writer_object = writer(fd_append)
 	writer_object.writerow(data_list)
 
@@ -82,9 +82,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s :
 								if (random_x == 0):
 									oled_cnn.sendall("flag=2;value=8;".encode('utf-8'))
 								elif (random_x == 1):
-									oled_cnn.sendall("flag=0;value=5;time=1;".encode('utf-8'))
+									oled_cnn.sendall("flag=1;value=5;time=1;".encode('utf-8'))
 								elif (random_x == 2):
-									oled_cnn.sendall("flag=0;value=7;time=1;".encode('utf-8'))
+									oled_cnn.sendall("flag=1;value=7;time=1;".encode('utf-8'))
 								# oled_cnn.sendall("flag=1;value=7;time=1;".encode('utf-8'))
 						#print(send_data)
 						servo_cnn.sendall(send_data.encode('utf-8'))

@@ -23,11 +23,11 @@ def map(value, min_angle, max_angle, min_pulse, max_pulse):
 def set_angle(pwm, channel, angle):
 	pulse = int(map(angle, 0, 180, servo_min, servo_max))
 	pwm.set_pwm(channel, 0, pulse)
-	print("######{} : {} : {}#####".format(channel,angle, pulse))
+	# print("######{} : {} : {}#####".format(channel,angle, pulse))
 
 def set_pulse(pwm, channel, pulse):
 	pwm.set_pwm(channel, 0, pulse)
-	print("####{} : {}".format(channel, pulse))
+	# print("####{} : {}".format(channel, pulse))
 
 def angle_to_pulse(angle):
 	pulse = int(map(angle, 0, 180, servo_min, servo_max))
@@ -53,5 +53,7 @@ def touch_emotion(pwm):
 
 def sleep_emotion(pwm, current_pulse):
 	ear_servo(pwm, 140)
+	set_pulse(pwm, 0, angle_to_pulse(90))
 	set_pulse(pwm, 1, angle_to_pulse(30))
+	current_pulse[0] = angle_to_pulse(90)
 	current_pulse[1] = angle_to_pulse(30)
